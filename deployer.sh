@@ -8,6 +8,11 @@ function file_list {
 	echo "    Choose File:"
 	mapfile -t files < <(find "$current_dir" -type f \( -name "*.yaml" -o -name "*.yml" \))
 
+	if [ "${#files[@]}" -eq 0 ]; then 
+		echo "there is not file .yaml or .yml in current directory"
+		exit 0
+	fi
+
 	for i in "${!files[@]}"; do
 		echo "$((i + 1))) ${files[i]}"
 	done
@@ -34,6 +39,12 @@ elif [[ $choice -ge 1 && $choice -le ${#files[@]} ]]; then
 	done
 
 	read -p "Choose image (0-${#image_list[@]})" image_choose
+
+	if [ $image_choose -ge "${#image_list[@]}" ]; then 
+		echo "menu is invalid"
+		exit 1
+	fi
+	
 	read -p "Input new tag image: " tag
 
 	# parse image 
